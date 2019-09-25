@@ -21,7 +21,10 @@ public class Cylindre : MonoBehaviour
 
 		gameObject.AddComponent<MeshFilter>();
 		gameObject.AddComponent<MeshRenderer>();
+	}
 
+	void Update()
+	{
 		nbTriangles = nbMeridians * 12;
 		nbVertices = nbMeridians * 2 + 4;
 
@@ -57,13 +60,13 @@ public class Cylindre : MonoBehaviour
 
 		int nbTrianglesCouvercle = nbMeridians * 6;
 
-		for (int i = 0, k = 0; i < nbTrianglesCouvercle; i += 6, k++)
+		for (int i = 0, k = 0; k < nbMeridians; i += 6, k++)
 		{
 			triangles[i + nbTrianglesCorps] = k;
 			triangles[i + nbTrianglesCorps + 1] = k + 1;
 			triangles[i + nbTrianglesCorps + 2] = nbVertices - 2;
-			triangles[i + nbTrianglesCorps + 3] = k + nbMeridians + 3;
-			triangles[i + nbTrianglesCorps + 4] = k + nbMeridians + 2;
+			triangles[i + nbTrianglesCorps + 3] = k + nbMeridians + 2;
+			triangles[i + nbTrianglesCorps + 4] = k + nbMeridians + 1;
 			triangles[i + nbTrianglesCorps + 5] = nbVertices - 1;
 		}
 

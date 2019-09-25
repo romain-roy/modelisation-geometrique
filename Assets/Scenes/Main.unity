@@ -112,7 +112,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &65399536
+--- !u!1001 &285769958
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2

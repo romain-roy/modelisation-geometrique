@@ -21,7 +21,10 @@ public class Sphere : MonoBehaviour
 
 		gameObject.AddComponent<MeshFilter>();
 		gameObject.AddComponent<MeshRenderer>();
+	}
 
+	void Update()
+	{
 		nbTriangles = 0;
 		nbVertices = 0;
 
