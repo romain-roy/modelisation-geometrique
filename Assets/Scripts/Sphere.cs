@@ -56,12 +56,10 @@ public class Sphere : MonoBehaviour
 		for (int i = 0, k = 0, p = 0; i <= nbTrianglesCorps; i += 6, k++, p++)
 		{
 			if (p == nbMeridians) { p = 0; k++; }
-			triangles[i] = k;
-			triangles[i + 1] = k + nbMeridians + 2;
+			triangles[i] = triangles[i + 3] = k;
+			triangles[i + 1] = triangles[i + 5] = k + nbMeridians + 2;
 			triangles[i + 2] = k + nbMeridians + 1;
-			triangles[i + 3] = k;
 			triangles[i + 4] = k + 1;
-			triangles[i + 5] = k + nbMeridians + 2;
 		}
 
 		for (int i = 0, k = 0; k < nbMeridians; i += 6, k++)
