@@ -53,8 +53,9 @@ public class Cylindre : MonoBehaviour
 
 		int nbTrianglesCorps = nbTriangles - (nbMeridians * 6);
 
-		for (int i = 0, k = 0; i <= nbTrianglesCorps; i += 6, k++)
+		for (int i = 0, k = 0, p = 0; i <= nbTrianglesCorps; i += 6, k++, p++)
 		{
+			if (p == nbMeridians) { p = 0; k++; }
 			triangles[i] = triangles[i + 3] = k;
 			triangles[i + 1] = k + nbMeridians + 1;
 			triangles[i + 2] = triangles[i + 4] = k + nbMeridians + 2;

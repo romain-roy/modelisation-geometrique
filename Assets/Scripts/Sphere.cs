@@ -15,13 +15,6 @@ public class Sphere : MonoBehaviour
 	private int nbTriangles;
 	private int nbVertices;
 
-	private void OnDrawGizmos()
-	{
-		if (vertices == null) return;
-		for (int i = 0; i < vertices.Length; i++)
-			Gizmos.DrawSphere(vertices[i], 0.1f);
-	}
-
 	void Start()
 	{
 		// Création d'un composant MeshFilter qui peut ensuite être visualisé
@@ -43,9 +36,9 @@ public class Sphere : MonoBehaviour
 		float x, y, z, phi, teta;
 
 		for (int i = 0; i <= nbMeridians; i++)
-			for (int j = 1; j <= nbParallels + 1; j++)
+			for (int j = 0; j <= nbParallels; j++)
 			{
-				phi = Mathf.PI * j / nbMeridians;
+				phi = Mathf.PI * j / nbParallels;
 				teta = 2 * Mathf.PI * i / nbMeridians;
 				x = radius * Mathf.Sin(phi) * Mathf.Cos(teta);
 				y = radius * Mathf.Sin(phi) * Mathf.Sin(teta);
@@ -60,12 +53,15 @@ public class Sphere : MonoBehaviour
 
 		int nbTrianglesCorps = nbTriangles - (nbMeridians * 6);
 
-		for (int i = 0, k = 0; i <= nbTrianglesCorps; i += 6, k++)
+		for (int i = 0, k = 0, p = 0; i <= nbTrianglesCorps; i += 6, k++, p++)
 		{
-			triangles[i] = triangles[i + 3] = k;
-			triangles[i + 1] = k + nbMeridians + 1;
-			triangles[i + 2] = triangles[i + 4] = k + nbMeridians + 2;
-			triangles[i + 5] = k + 1;
+			if (p == nbMeridians) { p = 0; k++; }
+			triangles[i] = k;
+			triangles[i + 1] = k + nbMeridians + 2;
+			triangles[i + 2] = k + nbMeridians + 1;
+			triangles[i + 3] = k;
+			triangles[i + 4] = k + 1;
+			triangles[i + 5] = k + nbMeridians + 2;
 		}
 
 		for (int i = 0, k = 0; k < nbMeridians; i += 6, k++)
