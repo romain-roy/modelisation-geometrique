@@ -24,13 +24,6 @@ public class Cylindre : MonoBehaviour
 		gameObject.AddComponent<MeshRenderer>();
 	}
 
-	private void OnDrawGizmos()
-	{
-		if (vertices == null) return;
-		for (int i = 0; i < vertices.Length; i++)
-			Gizmos.DrawSphere(vertices[i], 0.1f);
-	}
-
 	void Update()
 	{
 		nbTriangles = (nbMeridians * 6) * (nbParallels + 1) + (nbMeridians * 6);

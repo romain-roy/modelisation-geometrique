@@ -6,7 +6,7 @@ public class Sphere : MonoBehaviour
 {
 	public Material material;
 
-	public int radius;
+	public float radius;
 	public int nbParallels;
 	public int nbMeridians;
 
@@ -14,6 +14,13 @@ public class Sphere : MonoBehaviour
 	private int[] triangles;
 	private int nbTriangles;
 	private int nbVertices;
+
+	private void OnDrawGizmos()
+	{
+		if (vertices == null) return;
+		for (int i = 0; i < vertices.Length; i++)
+			Gizmos.DrawSphere(vertices[i], 0.1f);
+	}
 
 	void Start()
 	{
@@ -33,20 +40,21 @@ public class Sphere : MonoBehaviour
 
 		// Création des vertices
 
-		float x, y;
+		float x, y, z, phi, teta;
 
 		for (int i = 0; i <= nbMeridians; i++)
-		{
-			x = radius * Mathf.Cos(2 * Mathf.PI * i / nbMeridians);
-			y = radius * Mathf.Sin(2 * Mathf.PI * i / nbMeridians);
-			vertices[i] = new Vector3(x, 0, y);
-			for (int j = 1; j <= nbParallels; j++)
-				vertices[i + ((nbMeridians + 1) * j)] = new Vector3(x, (radius * 2) / (nbParallels + 1) * j, y);
-			vertices[i + ((nbMeridians + 1) * (nbParallels + 1))] = new Vector3(x, radius * 2, y);
-		}
+			for (int j = 1; j <= nbParallels + 1; j++)
+			{
+				phi = Mathf.PI * j / nbMeridians;
+				teta = 2 * Mathf.PI * i / nbMeridians;
+				x = radius * Mathf.Sin(phi) * Mathf.Cos(teta);
+				y = radius * Mathf.Sin(phi) * Mathf.Sin(teta);
+				z = radius * Mathf.Cos(phi);
+				vertices[i + ((nbMeridians + 1) * j)] = new Vector3(x, z, y);
+			}
 
-		vertices[nbVertices - 2] = new Vector3(0, 0, 0);
-		vertices[nbVertices - 1] = new Vector3(0, radius * 2, 0);
+		vertices[nbVertices - 2] = new Vector3(0, -radius, 0);
+		vertices[nbVertices - 1] = new Vector3(0, radius, 0);
 
 		// Création des triangles
 
