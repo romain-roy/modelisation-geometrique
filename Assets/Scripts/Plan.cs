@@ -4,41 +4,36 @@ using UnityEngine;
 
 public class Plan : MonoBehaviour
 {
-	public Material mat;
+	public Material material;
 
 	public int width;
 	public int height;
-	public int offset;
+	public int size;
 
 	private Vector3[] vertices;
 	private int[] triangles;
 	private int nbTriangles;
-	private int n;
+	private int nbVertices;
 
 	void Start()
 	{
-		gameObject.AddComponent<MeshFilter>(); // Création d'un composant MeshFilter qui peut ensuite être visualisé
+		// Création d'un composant MeshFilter qui peut ensuite être visualisé
+
+		gameObject.AddComponent<MeshFilter>();
 		gameObject.AddComponent<MeshRenderer>();
-	}
 
-	void Update()
-	{
 		nbTriangles = width * height * 6;
-		n = (width + 1) * (height + 1);
+		nbVertices = (width + 1) * (height + 1);
 
-		vertices = new Vector3[n];
+		vertices = new Vector3[nbVertices];
 		triangles = new int[nbTriangles];
 
 		// Création des vertices
 
-		for (int i = 0, x = 0, y = 0; i < n; i++)
+		for (int i = 0, x = 0, y = 0; i < nbVertices; i++)
 		{
-			if (x > width)
-			{
-				x = 0;
-				y++;
-			}
-			vertices[i] = new Vector3(x * offset, 0, y * offset);
+			if (x > width) { x = 0; y++; }
+			vertices[i] = new Vector3(x * size, 0, y * size);
 			x++;
 		}
 
@@ -49,14 +44,18 @@ public class Plan : MonoBehaviour
 			triangles[i + 1] = triangles[i + 5] = j + (width + 1) + 1;
 			triangles[i + 2] = j + 1;
 			triangles[i + 4] = j + (width + 1);
-			Mesh msh = new Mesh(); // Création et remplissage du Mesh
-
-			msh.vertices = vertices;
-			msh.triangles = triangles;
-
-			gameObject.GetComponent<MeshFilter>().mesh = msh; // Remplissage du Mesh et ajout du material
-			gameObject.GetComponent<MeshRenderer>().material = mat;
 		}
-	}
 
+		// Création et remplissage du Mesh
+
+		Mesh msh = new Mesh();
+
+		msh.vertices = vertices;
+		msh.triangles = triangles;
+
+		// Remplissage du Mesh et ajout du material
+
+		gameObject.GetComponent<MeshFilter>().mesh = msh;
+		gameObject.GetComponent<MeshRenderer>().material = material;
+	}
 }
