@@ -6,9 +6,10 @@ public class Cylindre : MonoBehaviour
 {
 	public Material material;
 
-	public int radius;
-	public int height;
+	public float radius;
+	public float height;
 	public int nbMeridians;
+	public int nbParallels;
 
 	private Vector3[] vertices;
 	private int[] triangles;
@@ -23,10 +24,17 @@ public class Cylindre : MonoBehaviour
 		gameObject.AddComponent<MeshRenderer>();
 	}
 
+	private void OnDrawGizmos()
+	{
+		if (vertices == null) return;
+		for (int i = 0; i < vertices.Length; i++)
+			Gizmos.DrawSphere(vertices[i], 0.1f);
+	}
+
 	void Update()
 	{
-		nbTriangles = nbMeridians * 12;
-		nbVertices = nbMeridians * 2 + 4;
+		nbTriangles = (nbMeridians * 6) * (nbParallels + 1) + (nbMeridians * 6);
+		nbVertices = (nbMeridians + 1) * (nbParallels + 2) + 2;
 
 		vertices = new Vector3[nbVertices];
 		triangles = new int[nbTriangles];
@@ -40,7 +48,9 @@ public class Cylindre : MonoBehaviour
 			x = radius * Mathf.Cos(2 * Mathf.PI * i / nbMeridians);
 			y = radius * Mathf.Sin(2 * Mathf.PI * i / nbMeridians);
 			vertices[i] = new Vector3(x, 0, y);
-			vertices[i + nbMeridians + 1] = new Vector3(x, height, y);
+			for (int j = 1; j <= nbParallels; j++)
+				vertices[i + ((nbMeridians + 1) * j)] = new Vector3(x, height / (nbParallels + 1) * j, y);
+			vertices[i + ((nbMeridians + 1) * (nbParallels + 1))] = new Vector3(x, height, y);
 		}
 
 		vertices[nbVertices - 2] = new Vector3(0, 0, 0);
@@ -48,9 +58,9 @@ public class Cylindre : MonoBehaviour
 
 		// Création des triangles
 
-		int nbTrianglesCorps = nbMeridians * 6;
+		int nbTrianglesCorps = nbTriangles - (nbMeridians * 6);
 
-		for (int i = 0, k = 0; i < nbTrianglesCorps; i += 6, k++)
+		for (int i = 0, k = 0; i <= nbTrianglesCorps; i += 6, k++)
 		{
 			triangles[i] = triangles[i + 3] = k;
 			triangles[i + 1] = k + nbMeridians + 1;
@@ -58,15 +68,13 @@ public class Cylindre : MonoBehaviour
 			triangles[i + 5] = k + 1;
 		}
 
-		int nbTrianglesCouvercle = nbMeridians * 6;
-
 		for (int i = 0, k = 0; k < nbMeridians; i += 6, k++)
 		{
 			triangles[i + nbTrianglesCorps] = k;
 			triangles[i + nbTrianglesCorps + 1] = k + 1;
 			triangles[i + nbTrianglesCorps + 2] = nbVertices - 2;
-			triangles[i + nbTrianglesCorps + 3] = k + nbMeridians + 2;
-			triangles[i + nbTrianglesCorps + 4] = k + nbMeridians + 1;
+			triangles[i + nbTrianglesCorps + 3] = k + (nbMeridians + 1) * (nbParallels + 1) + 1;
+			triangles[i + nbTrianglesCorps + 4] = k + (nbMeridians + 1) * (nbParallels + 1);
 			triangles[i + nbTrianglesCorps + 5] = nbVertices - 1;
 		}
 

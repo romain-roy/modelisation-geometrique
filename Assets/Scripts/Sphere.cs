@@ -25,15 +25,50 @@ public class Sphere : MonoBehaviour
 
 	void Update()
 	{
-		nbTriangles = 0;
-		nbVertices = 0;
+		nbTriangles = (nbMeridians * 6) * (nbParallels + 1) + (nbMeridians * 6);
+		nbVertices = (nbMeridians + 1) * (nbParallels + 2) + 2;
 
 		vertices = new Vector3[nbVertices];
 		triangles = new int[nbTriangles];
 
 		// Création des vertices
 
+		float x, y;
 
+		for (int i = 0; i <= nbMeridians; i++)
+		{
+			x = radius * Mathf.Cos(2 * Mathf.PI * i / nbMeridians);
+			y = radius * Mathf.Sin(2 * Mathf.PI * i / nbMeridians);
+			vertices[i] = new Vector3(x, 0, y);
+			for (int j = 1; j <= nbParallels; j++)
+				vertices[i + ((nbMeridians + 1) * j)] = new Vector3(x, (radius * 2) / (nbParallels + 1) * j, y);
+			vertices[i + ((nbMeridians + 1) * (nbParallels + 1))] = new Vector3(x, radius * 2, y);
+		}
+
+		vertices[nbVertices - 2] = new Vector3(0, 0, 0);
+		vertices[nbVertices - 1] = new Vector3(0, radius * 2, 0);
+
+		// Création des triangles
+
+		int nbTrianglesCorps = nbTriangles - (nbMeridians * 6);
+
+		for (int i = 0, k = 0; i <= nbTrianglesCorps; i += 6, k++)
+		{
+			triangles[i] = triangles[i + 3] = k;
+			triangles[i + 1] = k + nbMeridians + 1;
+			triangles[i + 2] = triangles[i + 4] = k + nbMeridians + 2;
+			triangles[i + 5] = k + 1;
+		}
+
+		for (int i = 0, k = 0; k < nbMeridians; i += 6, k++)
+		{
+			triangles[i + nbTrianglesCorps] = k;
+			triangles[i + nbTrianglesCorps + 1] = k + 1;
+			triangles[i + nbTrianglesCorps + 2] = nbVertices - 2;
+			triangles[i + nbTrianglesCorps + 3] = k + (nbMeridians + 1) * (nbParallels + 1) + 1;
+			triangles[i + nbTrianglesCorps + 4] = k + (nbMeridians + 1) * (nbParallels + 1);
+			triangles[i + nbTrianglesCorps + 5] = nbVertices - 1;
+		}
 
 		// Création et remplissage du Mesh
 
