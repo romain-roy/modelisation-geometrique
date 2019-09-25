@@ -37,6 +37,8 @@ public class Plan : MonoBehaviour
 			x++;
 		}
 
+		// Création des triangles
+
 		for (int i = 0, j = 0, k = 0; i < nbTriangles; i += 6, j++, k++)
 		{
 			if (k == width) { k = 0; j++; }
