@@ -68,16 +68,14 @@ public class Maillage : MonoBehaviour
 		for (int i = 0; i < nbVertices; i++)
 			vertices[i] /= normMax;
 
-		// Calculer les normales
-
-		
-
 		// Création et remplissage du Mesh
 
 		Mesh msh = new Mesh();
 
 		msh.vertices = vertices;
 		msh.triangles = triangles;
+		
+		msh.RecalculateNormals();
 
 		// Remplissage du Mesh et ajout du material
 
