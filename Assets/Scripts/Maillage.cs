@@ -27,7 +27,7 @@ public class Maillage : MonoBehaviour
 		string[] nombres = reader[1].Split(' ');
 
 		nbVertices = int.Parse(nombres[0]);
-		nbTriangles = int.Parse(nombres[2]);
+		nbTriangles = int.Parse(nombres[1]) * 3;
 
 		vertices = new Vector3[nbVertices];
 		triangles = new int[nbTriangles];
@@ -74,7 +74,7 @@ public class Maillage : MonoBehaviour
 
 		msh.vertices = vertices;
 		msh.triangles = triangles;
-		
+
 		msh.RecalculateNormals();
 
 		// Remplissage du Mesh et ajout du material

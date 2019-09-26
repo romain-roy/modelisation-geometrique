@@ -43,6 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cff6865e67d01724a992f8f443ba9c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
+  material: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   nomFichier: triceratops
   taille: 15
