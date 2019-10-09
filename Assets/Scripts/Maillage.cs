@@ -9,6 +9,7 @@ public class Maillage : MonoBehaviour
 	public int taille;
 
 	private Vector3[] vertices;
+	private Vector3[] normals;
 	private int[] triangles;
 	private int nbTriangles;
 	private int nbVertices;
@@ -30,30 +31,35 @@ public class Maillage : MonoBehaviour
 		nbTriangles = int.Parse(nombres[1]) * 3;
 
 		vertices = new Vector3[nbVertices];
+		normals = new Vector3[nbVertices];
 		triangles = new int[nbTriangles];
 
 		for (int i = 2, v = 0, t = 0; i < reader.Length; i++)
 		{
 			nombres = reader[i].Split(' ');
 			if (i < nbVertices + 2)
-				vertices[v++] = new Vector3(float.Parse(nombres[0].Replace('.', ',')), float.Parse(nombres[1].Replace('.', ',')), float.Parse(nombres[2].Replace('.', ',')));
+			{
+				vertices[v] = new Vector3(float.Parse(nombres[0].Replace('.', ',')), float.Parse(nombres[1].Replace('.', ',')), float.Parse(nombres[2].Replace('.', ',')));
+				v++;
+			}
 			else
 			{
-				triangles[t++] = int.Parse(nombres[1]);
-				triangles[t++] = int.Parse(nombres[2]);
-				triangles[t++] = int.Parse(nombres[3]);
+				triangles[t] = int.Parse(nombres[1]);
+				triangles[t + 1] = int.Parse(nombres[2]);
+				triangles[t + 2] = int.Parse(nombres[3]);
+
+				// Normales
+
+				Vector3 edge1 = vertices[triangles[t + 1]] - vertices[triangles[t]];
+				Vector3 edge2 = vertices[triangles[t + 2]] - vertices[triangles[t]];
+				Vector3 normal = Vector3.Normalize(Vector3.Cross(edge1, edge2));
+				normals[triangles[t]] += normal;
+				normals[triangles[t + 1]] += normal;
+				normals[triangles[t + 2]] += normal;
+
+				t += 3;
 			}
 		}
-
-		// Centrer l'objet
-
-		Vector3 sommeVertices = vertices[0];
-
-		for (int i = 1; i < nbVertices; i++)
-			sommeVertices += vertices[i];
-
-		Vector3 centreGravite = sommeVertices /= nbVertices;
-		gameObject.transform.position = centreGravite;
 
 		// Normaliser sa taille
 
@@ -63,10 +69,21 @@ public class Maillage : MonoBehaviour
 			if (vertices[0].magnitude > normMax)
 				normMax = vertices[0].magnitude;
 
-		normMax /= taille;
+		float ratioTaille = normMax / taille;
 
 		for (int i = 0; i < nbVertices; i++)
-			vertices[i] /= normMax;
+			vertices[i] /= ratioTaille;
+
+		// Centrer l'objet
+
+		Vector3 sommeVertices = vertices[0];
+
+		for (int i = 1; i < nbVertices; i++)
+			sommeVertices += vertices[i];
+
+		Vector3 centreGravite = sommeVertices /= nbVertices;
+
+		gameObject.transform.position = centreGravite / ratioTaille;
 
 		// Création et remplissage du Mesh
 
@@ -74,8 +91,7 @@ public class Maillage : MonoBehaviour
 
 		msh.vertices = vertices;
 		msh.triangles = triangles;
-
-		msh.RecalculateNormals();
+		msh.normals = normals;
 
 		// Remplissage du Mesh et ajout du material
 
