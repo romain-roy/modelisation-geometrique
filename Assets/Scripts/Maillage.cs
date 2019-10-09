@@ -23,7 +23,7 @@ public class Maillage : MonoBehaviour
 
 		// Lecture du fichier
 
-		string[] reader = System.IO.File.ReadAllLines("Assets/Maillages/" + nomFichier + ".off");
+		string[] reader = System.IO.File.ReadAllLines("Assets/Meshs/" + nomFichier + ".off");
 
 		string[] nombres = reader[1].Split(' ');
 
