@@ -19,7 +19,10 @@ public class Volume : MonoBehaviour
 
     public Transform cube;
     public float tailleCube = 1.0f;
+    public bool intersection;
     public List<Sphere> spheres;
+
+    private bool hasIntersection;
 
     void Start()
     {
@@ -50,12 +53,28 @@ public class Volume : MonoBehaviour
             {
                 for (float z = -boiteEnglobante.z; z < boiteEnglobante.z; z++)
                 {
-                    foreach (Sphere s in spheres)
+                    if (intersection)
                     {
-                        if ((x - s.position.x) * (x - s.position.x) + (y - s.position.y) * (y - s.position.y) + (z - s.position.z) * (z - s.position.z) - s.rayon * s.rayon < 0.0f)
+                        hasIntersection = true;
+                        foreach (Sphere s in spheres)
                         {
-                            Transform newCube = Instantiate(cube, new Vector3(x * tailleCube, y * tailleCube, z * tailleCube), Quaternion.identity);
-                            newCube.localScale = new Vector3(tailleCube, tailleCube, tailleCube);
+                            hasIntersection &= (x - s.position.x) * (x - s.position.x) + (y - s.position.y) * (y - s.position.y) + (z - s.position.z) * (z - s.position.z) - s.rayon * s.rayon < 0.0f;
+                        }
+                        if (hasIntersection)
+                            {
+                                Transform newCube = Instantiate(cube, new Vector3(x * tailleCube, y * tailleCube, z * tailleCube), Quaternion.identity);
+                                newCube.localScale = new Vector3(tailleCube, tailleCube, tailleCube);
+                            }
+                    }
+                    else
+                    {
+                        foreach (Sphere s in spheres)
+                        {
+                            if ((x - s.position.x) * (x - s.position.x) + (y - s.position.y) * (y - s.position.y) + (z - s.position.z) * (z - s.position.z) - s.rayon * s.rayon < 0.0f)
+                            {
+                                Transform newCube = Instantiate(cube, new Vector3(x * tailleCube, y * tailleCube, z * tailleCube), Quaternion.identity);
+                                newCube.localScale = new Vector3(tailleCube, tailleCube, tailleCube);
+                            }
                         }
                     }
                 }
