@@ -293,13 +293,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cube: {fileID: 616826502271892780, guid: 32283e5bc9fec2a4da76424d71ba6cd8, type: 3}
+  tailleCube: 2
   spheres:
   - position: {x: 0, y: 0, z: 0}
-    rayon: 10
-  - position: {x: 20, y: 0, z: 0}
-    rayon: 10
-  - position: {x: 40, y: 0, z: 0}
-    rayon: 10
+    rayon: 5
+  - position: {x: 10, y: 0, z: 0}
+    rayon: 5
 --- !u!4 &1443064827
 Transform:
   m_ObjectHideFlags: 0

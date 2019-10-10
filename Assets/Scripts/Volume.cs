@@ -18,6 +18,7 @@ public class Volume : MonoBehaviour
     }
 
     public Transform cube;
+    public float tailleCube = 1.0f;
     public List<Sphere> spheres;
 
     void Start()
@@ -51,9 +52,10 @@ public class Volume : MonoBehaviour
                 {
                     foreach (Sphere s in spheres)
                     {
-                        if ((x - s.position.x) * (x - s.position.x) + (y - s.position.y) * (y - s.position.y) + (z - s.position.z) * (z - s.position.z) - s.rayon * s.rayon < 0)
+                        if ((x - s.position.x) * (x - s.position.x) + (y - s.position.y) * (y - s.position.y) + (z - s.position.z) * (z - s.position.z) - s.rayon * s.rayon < 0.0f)
                         {
-                            Instantiate(cube, new Vector3(x, y, z), Quaternion.identity);
+                            Transform newCube = Instantiate(cube, new Vector3(x * tailleCube, y * tailleCube, z * tailleCube), Quaternion.identity);
+                            newCube.localScale = new Vector3(tailleCube, tailleCube, tailleCube);
                         }
                     }
                 }
