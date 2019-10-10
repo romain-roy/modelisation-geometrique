@@ -4,21 +4,58 @@ using UnityEngine;
 
 public class Volume : MonoBehaviour
 {
+    [System.Serializable]
+    public class Sphere
+    {
+        public Vector3 position;
+        public float rayon;
+
+        public Sphere(Vector3 position, float rayon)
+        {
+            this.position = position;
+            this.rayon = rayon;
+        }
+    }
+
     public Transform cube;
-    public int nombreCubes;
-    public float rayonSphere;
+    public List<Sphere> spheres;
 
     void Start()
     {
-        float offset = nombreCubes / 2.0f;
-        for (float x = -offset; x < nombreCubes; x++)
+        float minX = spheres[0].position.x - spheres[0].rayon;
+        float minY = spheres[0].position.y - spheres[0].rayon;
+        float minZ = spheres[0].position.z - spheres[0].rayon;
+        float maxX = spheres[0].position.x + spheres[0].rayon;
+        float maxY = spheres[0].position.y + spheres[0].rayon;
+        float maxZ = spheres[0].position.z + spheres[0].rayon;
+
+        for (int i = 1; i < spheres.Count; i++)
         {
-            for (float y = -offset; y < nombreCubes; y++)
+            if (spheres[i].position.x - spheres[i].rayon < minX) minX = spheres[i].position.x - spheres[i].rayon;
+            if (spheres[i].position.y - spheres[i].rayon < minY) minY = spheres[i].position.y - spheres[i].rayon;
+            if (spheres[i].position.z - spheres[i].rayon < minZ) minZ = spheres[i].position.z - spheres[i].rayon;
+            if (spheres[i].position.x + spheres[i].rayon > maxX) maxX = spheres[i].position.x + spheres[i].rayon;
+            if (spheres[i].position.y + spheres[i].rayon > maxY) maxY = spheres[i].position.y + spheres[i].rayon;
+            if (spheres[i].position.z + spheres[i].rayon > maxZ) maxZ = spheres[i].position.z + spheres[i].rayon;
+        }
+
+        Vector3 boiteEnglobante = new Vector3(maxX - minX, maxY - minY, maxZ - minZ);
+
+        Debug.Log("Nombre de cubes\nX : " + minX + " à " + maxX + ", Y : " + minY + " à " + maxY + ", Z : " + minZ + " à " + maxZ);
+
+        for (float x = -boiteEnglobante.x; x < boiteEnglobante.x; x++)
+        {
+            for (float y = -boiteEnglobante.y; y < boiteEnglobante.y; y++)
             {
-                for (float z = -offset; z < nombreCubes; z++)
+                for (float z = -boiteEnglobante.z; z < boiteEnglobante.z; z++)
                 {
-                    if (x * x + y * y + z * z - rayonSphere * rayonSphere < 0)
-                        Instantiate(cube, new Vector3(x, y, z), Quaternion.identity);
+                    foreach (Sphere s in spheres)
+                    {
+                        if ((x - s.position.x) * (x - s.position.x) + (y - s.position.y) * (y - s.position.y) + (z - s.position.z) * (z - s.position.z) - s.rayon * s.rayon < 0)
+                        {
+                            Instantiate(cube, new Vector3(x, y, z), Quaternion.identity);
+                        }
+                    }
                 }
             }
         }
