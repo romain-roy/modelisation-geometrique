@@ -21,10 +21,7 @@ public class Plan : MonoBehaviour
 
 		gameObject.AddComponent<MeshFilter>();
 		gameObject.AddComponent<MeshRenderer>();
-	}
-
-	void Update()
-	{
+        
 		nbTriangles = width * height * 6;
 		nbVertices = (width + 1) * (height + 1);
 

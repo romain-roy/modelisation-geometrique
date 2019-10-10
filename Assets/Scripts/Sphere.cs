@@ -21,11 +21,8 @@ public class Sphere : MonoBehaviour
 
 		gameObject.AddComponent<MeshFilter>();
 		gameObject.AddComponent<MeshRenderer>();
-	}
 
-	void Update()
-	{
-		nbTriangles = (nbMeridians * 6) * (nbParallels + 1) + (nbMeridians * 6);
+        nbTriangles = (nbMeridians * 6) * (nbParallels + 1) + (nbMeridians * 6);
 		nbVertices = (nbMeridians + 1) * (nbParallels + 2) + 2;
 
 		vertices = new Vector3[nbVertices];
