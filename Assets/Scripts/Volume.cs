@@ -5,16 +5,20 @@ using UnityEngine;
 public class Volume : MonoBehaviour
 {
     public Transform cube;
+    public int nombreCubes;
+    public float rayonSphere;
 
     void Start()
     {
-        for (int x = 0; x < 10; x++)
+        float offset = nombreCubes / 2.0f;
+        for (float x = -offset; x < nombreCubes; x++)
         {
-            for (int y = 0; y < 10; y++)
+            for (float y = -offset; y < nombreCubes; y++)
             {
-                for (int z = 0; z < 10; z++)
+                for (float z = -offset; z < nombreCubes; z++)
                 {
-                    Instantiate(cube, new Vector3(x, y, z), Quaternion.identity);
+                    if (x * x + y * y + z * z - rayonSphere * rayonSphere < 0)
+                        Instantiate(cube, new Vector3(x, y, z), Quaternion.identity);
                 }
             }
         }
