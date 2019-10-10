@@ -46,3 +46,5 @@ MonoBehaviour:
   material: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   nomFichier: triceratops
   taille: 5
+  centrer: 1
+  normaliserTaille: 1
