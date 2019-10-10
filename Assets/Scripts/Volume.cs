@@ -17,12 +17,36 @@ public class Volume : MonoBehaviour
         }
     }
 
+    public class Cube
+    {
+        private Transform cube;
+        private float potentiel;
+
+        public Cube(Transform cube, float potentiel)
+        {
+            this.cube = cube;
+            this.potentiel = potentiel;
+        }
+
+        public Transform getCube()
+        {
+            return this.cube;
+        }
+
+        public float getpotentiel()
+        {
+            return this.potentiel;
+        }
+    }
+
     public Transform cube;
     public float tailleCube = 1.0f;
+    public float potentiel;
     public bool intersection;
     public List<Sphere> spheres;
 
     private bool hasIntersection;
+    public List<Cube> cubes = new List<Cube>();
 
     void Start()
     {
@@ -45,7 +69,7 @@ public class Volume : MonoBehaviour
 
         Vector3 boiteEnglobante = new Vector3(maxX - minX, maxY - minY, maxZ - minZ);
 
-        Debug.Log("Nombre de cubes\nX : " + minX + " à " + maxX + ", Y : " + minY + " à " + maxY + ", Z : " + minZ + " à " + maxZ);
+        Debug.Log("X : " + minX + " à " + maxX + ", Y : " + minY + " à " + maxY + ", Z : " + minZ + " à " + maxZ);
 
         for (float x = -boiteEnglobante.x; x < boiteEnglobante.x; x++)
         {
@@ -61,10 +85,11 @@ public class Volume : MonoBehaviour
                             hasIntersection &= (x - s.position.x) * (x - s.position.x) + (y - s.position.y) * (y - s.position.y) + (z - s.position.z) * (z - s.position.z) - s.rayon * s.rayon < 0.0f;
                         }
                         if (hasIntersection)
-                            {
-                                Transform newCube = Instantiate(cube, new Vector3(x * tailleCube, y * tailleCube, z * tailleCube), Quaternion.identity);
-                                newCube.localScale = new Vector3(tailleCube, tailleCube, tailleCube);
-                            }
+                        {
+                            Transform newCube = Instantiate(cube, new Vector3(x * tailleCube, y * tailleCube, z * tailleCube), Quaternion.identity);
+                            newCube.localScale = new Vector3(tailleCube, tailleCube, tailleCube);
+                            cubes.Add(new Cube(newCube, potentiel));
+                        }
                     }
                     else
                     {
@@ -74,12 +99,20 @@ public class Volume : MonoBehaviour
                             {
                                 Transform newCube = Instantiate(cube, new Vector3(x * tailleCube, y * tailleCube, z * tailleCube), Quaternion.identity);
                                 newCube.localScale = new Vector3(tailleCube, tailleCube, tailleCube);
+                                float potentiel = Vector3.Distance(new Vector3(x, y, z), s.position);
+                                cubes.Add(new Cube(newCube, potentiel));
                             }
                         }
                     }
                 }
             }
         }
-
+        foreach (Cube c in cubes)
+        {
+            if (c.getpotentiel() > potentiel)
+            {
+                c.getCube().localScale = new Vector3(0, 0, 0);
+            }
+        }
     }
 }

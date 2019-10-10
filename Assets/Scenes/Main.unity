@@ -294,12 +294,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cube: {fileID: 616826502271892780, guid: 32283e5bc9fec2a4da76424d71ba6cd8, type: 3}
   tailleCube: 1
-  intersection: 1
+  potentiel: 10
+  intersection: 0
   spheres:
   - position: {x: 0, y: 0, z: 0}
-    rayon: 5
-  - position: {x: 6, y: 0, z: 0}
-    rayon: 5
+    rayon: 10
+  - position: {x: 20, y: 0, z: 0}
+    rayon: 10
 --- !u!4 &1443064827
 Transform:
   m_ObjectHideFlags: 0
