@@ -66,8 +66,8 @@ public class Maillage : MonoBehaviour
 		float normMax = vertices[0].magnitude;
 
 		for (int i = 1; i < nbVertices; i++)
-			if (vertices[0].magnitude > normMax)
-				normMax = vertices[0].magnitude;
+			if (vertices[i].magnitude > normMax)
+				normMax = vertices[i].magnitude;
 
 		float ratioTaille = normMax / taille;
 

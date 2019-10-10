@@ -45,4 +45,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   nomFichier: triceratops
-  taille: 3
+  taille: 5
