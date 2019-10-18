@@ -8,13 +8,13 @@ Une autre partie permet de créer des représentations volumiques de formes, com
 
 ### Aperçu
 
-###### Formes
+###### Quadriques
 
-![Aperçu](/Images/Formes.png)
+![Quadriques](/Images/Formes.png)
 
-###### Maillage
+###### Meshs
 
-![Maillage](/Images/Maillage.png)
+![Meshs](/Images/Maillage.png)
 
 ###### Représentation volumique
 
