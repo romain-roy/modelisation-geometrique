@@ -1,14 +1,10 @@
 # Modélisation géométrique
 
-Divers algorithmes permettant de modéliser des formes et de les décomposer en facettes triangulaires sur Unity.
+Divers algorithmes permettant de modéliser des quadriques et leur représentation surfacique en les décomposant en facettes triangulaires sur Unity.
 
 Permet aussi de lire des fichiers de maillage au format `.off`.
 
-Formes déjà faites :
-* Plan
-* Cylindre
-* Sphère
-* Cône
+Une autre partie permet de créer des représentations volumiques de formes, comme des sphères, avec une méthode d'énumération spatiale. Des opérateurs de mélanges permettent de gérer les interactions entre les sphères (union, intersection).
 
 ### Aperçu
 
@@ -19,3 +15,7 @@ Formes déjà faites :
 ###### Maillage
 
 ![Maillage](/Images/Maillage.png)
+
+###### Représentation volumique
+
+![Volumes](/Images/Volumes.png)
