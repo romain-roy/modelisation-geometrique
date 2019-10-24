@@ -19,8 +19,6 @@ public class Subdivision : MonoBehaviour
                 else pointsBase.Add(new Vector3(i, 1 - j, 0));
 
         pointsChaikin = pointsBase;
-
-        Debug.Log("Appuyez sur Espace pour actualiser le nombre de Chakin");
     }
 
     void Update()
