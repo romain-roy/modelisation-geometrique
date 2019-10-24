@@ -31,7 +31,7 @@ public class Subdivision : MonoBehaviour
         }
     }
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         for (int k = 0; k < pointsChaikin.Count; k++)

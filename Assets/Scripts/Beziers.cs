@@ -36,6 +36,13 @@ public class Beziers : MonoBehaviour
         }
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        for (int i = 0; i < P.Count - 1; i++)
+            Gizmos.DrawLine(P[i], P[i + 1]);
+    }
+
     static int Factorial(int n)
     {
         return n > 1 ? n * Factorial(n - 1) : 1;

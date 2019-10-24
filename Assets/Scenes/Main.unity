@@ -263,7 +263,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1001 &1170462574
+--- !u!1001 &2002959398
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -329,6 +329,51 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[4].x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[4].y
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[5].x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[5].y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[6].x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[6].y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[7].x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425495259922571699, guid: 4c0a3e95972b438469ed30c410c408f7,
+        type: 3}
+      propertyPath: P.Array.data[7].y
+      value: -2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c0a3e95972b438469ed30c410c408f7, type: 3}
