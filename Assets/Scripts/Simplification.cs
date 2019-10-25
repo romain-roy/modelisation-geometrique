@@ -1,166 +1,182 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Globalization;
 using UnityEngine;
-
 
 public class Simplification : MonoBehaviour
 {
-    public float division = 5f;
-    public GameObject sphere;
-    List<Cube> matrix;
     struct Cube
     {
-        public Vector3 minPos;
-        public Vector3 maxPos;
+        public Vector3 posMin;
+        public Vector3 posMax;
     }
 
+    public Material material;
+    public string nomFichier;
+    public int taille;
+    public bool centrer;
+    public bool normaliserTaille;
+    public float division;
 
-    Mesh mesh;
-    Vector3[] vertices;
-    int[] triangles;
-    // Start is called before the first frame update
+    private Vector3[] vertices;
+    private Vector3[] normals;
+    private int[] triangles;
+    private int nbTriangles;
+    private int nbVertices;
+    private List<Cube> matrix;
+
     void Start()
     {
-        OpenMesh();
-        createMatrix();
-        simplification();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.RecalculateNormals();
-    }
+        // Création d'un composant MeshFilter qui peut ensuite être visualisé
 
-    // Update is called once per frame
-    void Update()
-    {
+        gameObject.AddComponent<MeshFilter>();
+        gameObject.AddComponent<MeshRenderer>();
 
-    }
-    void OpenMesh()
-    {
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
+        // Lecture du fichier
 
-        string[] lines = System.IO.File.ReadAllLines(@"Assets/triceratops.off");
-        string[] tmpVertex = lines[1].Split(' ');
-        int nbvertex = int.Parse(tmpVertex[0]);
-        int nbTriangles = int.Parse(tmpVertex[1]);
+        string[] reader = System.IO.File.ReadAllLines("Assets/Meshs/" + nomFichier + ".off");
 
-        vertices = new Vector3[nbvertex];
-        triangles = new int[nbTriangles * 3];
+        string[] nombres = reader[1].Split(' ');
 
-        //recupere les points
-        for (int i = 0; i < nbvertex; i++)
+        nbVertices = int.Parse(nombres[0]);
+        nbTriangles = int.Parse(nombres[1]) * 3;
+
+        vertices = new Vector3[nbVertices];
+        normals = new Vector3[nbVertices];
+        triangles = new int[nbTriangles];
+
+        for (int i = 2, v = 0, t = 0; i < reader.Length; i++)
         {
-            string[] coord = lines[2 + i].Split(' ');
-            vertices[i] = new Vector3(float.Parse(coord[0], CultureInfo.InvariantCulture),
-                                      float.Parse(coord[1], CultureInfo.InvariantCulture),
-                                      float.Parse(coord[2], CultureInfo.InvariantCulture));
+            nombres = reader[i].Split(' ');
+            if (i < nbVertices + 2)
+            {
+                vertices[v] = new Vector3(float.Parse(nombres[0].Replace('.', ',')), float.Parse(nombres[1].Replace('.', ',')), float.Parse(nombres[2].Replace('.', ',')));
+                v++;
+            }
+            else
+            {
+                triangles[t] = int.Parse(nombres[1]);
+                triangles[t + 1] = int.Parse(nombres[2]);
+                triangles[t + 2] = int.Parse(nombres[3]);
+
+                // Normales
+
+                Vector3 edge1 = vertices[triangles[t + 1]] - vertices[triangles[t]];
+                Vector3 edge2 = vertices[triangles[t + 2]] - vertices[triangles[t]];
+                Vector3 normal = Vector3.Normalize(Vector3.Cross(edge1, edge2));
+                normals[triangles[t]] += normal;
+                normals[triangles[t + 1]] += normal;
+                normals[triangles[t + 2]] += normal;
+
+                t += 3;
+            }
         }
 
+        // Normaliser sa taille
 
-        //recuperer les indices des triangles
-        int triangle = 0;
-        for (int i = 0; i < nbTriangles; i++)
+        float ratioTaille = 1.0f;
+
+        if (normaliserTaille)
         {
-            string[] index = lines[2 + i + nbvertex].Split(' ');
-            triangles[triangle] = int.Parse(index[1]);
-            triangles[triangle + 1] = int.Parse(index[2]);
-            triangles[triangle + 2] = int.Parse(index[3]);
+            float normMax = vertices[0].magnitude;
 
-            triangle += 3;
+            for (int i = 1; i < nbVertices; i++)
+                if (vertices[i].magnitude > normMax)
+                    normMax = vertices[i].magnitude;
+
+            ratioTaille = normMax / taille;
+
+            for (int i = 0; i < nbVertices; i++)
+                vertices[i] /= ratioTaille;
         }
+
+        // Centrer l'objet
+
+        if (centrer)
+        {
+            Vector3 sommeVertices = vertices[0];
+
+            for (int i = 1; i < nbVertices; i++)
+                sommeVertices += vertices[i];
+
+            Vector3 centreGravite = sommeVertices /= nbVertices;
+
+            gameObject.transform.position = centreGravite / ratioTaille;
+        }
+
+        // Simplification
+
+        if (division > 0)
+        {
+            Vector3 posMin = vertices[0];
+            Vector3 posMax = vertices[0];
+            for (int i = 1; i < vertices.Length; i++)
+            {
+                if (posMin.x > vertices[i].x) posMin.x = vertices[i].x;
+                if (posMin.y > vertices[i].y) posMin.y = vertices[i].y;
+                if (posMin.z > vertices[i].z) posMin.z = vertices[i].z;
+                if (posMax.x < vertices[i].x) posMax.x = vertices[i].x;
+                if (posMax.y < vertices[i].y) posMax.y = vertices[i].y;
+                if (posMax.z < vertices[i].z) posMax.z = vertices[i].z;
+            }
+            CreateMatrix(posMin, posMax);
+            Simplify();
+        }
+
+        // Création et remplissage du Mesh
+
+        Mesh msh = new Mesh();
+
+        msh.vertices = vertices;
+        msh.triangles = triangles;
+        msh.normals = normals;
+
+        // Remplissage du Mesh et ajout du material
+
+        gameObject.GetComponent<MeshFilter>().mesh = msh;
+        gameObject.GetComponent<MeshRenderer>().material = material;
     }
 
-    Vector3 PosMax()
+    void CreateMatrix(Vector3 posMin, Vector3 posMax)
     {
-        Vector3 posMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            if (posMax.x < vertices[i].x) posMax.x = vertices[i].x;
-            if (posMax.y < vertices[i].y) posMax.y = vertices[i].y;
-            if (posMax.z < vertices[i].z) posMax.z = vertices[i].z;
-        }
-        return posMax;
-    }
-
-    Vector3 PosMin()
-    {
-        Vector3 posMin = new Vector3(0, 0, 0);
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            if (posMin.x > vertices[i].x) posMin.x = vertices[i].x;
-            if (posMin.y > vertices[i].y) posMin.y = vertices[i].y;
-            if (posMin.z > vertices[i].z) posMin.z = vertices[i].z;
-        }
-        return posMin;
-    }
-    void createMatrix()
-    {
-        Vector3 minpos = PosMin();
-        Vector3 maxpos = PosMax();
-
-        float distanceX = maxpos.x - minpos.x;
-        float distanceY = maxpos.y - minpos.y;
-        float distanceZ = maxpos.z - minpos.z;
+        float distanceX = posMax.x - posMin.x;
+        float distanceY = posMax.y - posMin.y;
+        float distanceZ = posMax.z - posMin.z;
 
         float dvX = distanceX / division;
-        Debug.Log(division);
         float dvY = (distanceY / division);
         float dvZ = (distanceZ / division);
         matrix = new List<Cube>();
 
         for (int k = 0; k <= division; k++)
-        {
             for (int j = 0; j <= division; j++)
-            {
                 for (int i = 0; i <= division; i++)
                 {
                     Cube cube;
-                    cube.minPos = new Vector3(minpos.x + dvX * i, minpos.y + dvY * j, minpos.z + dvZ * k);
-                    cube.maxPos = new Vector3(minpos.x + dvX * (i + 1), minpos.y + dvY * (j + 1), minpos.z + dvZ * (k + 1));
-                    //Instantiate(sphere, cube.minPos, Quaternion.identity);
-                    //Instantiate(sphere, cube.maxPos, Quaternion.identity);
+                    cube.posMin = new Vector3(posMin.x + dvX * i, posMin.y + dvY * j, posMin.z + dvZ * k);
+                    cube.posMax = new Vector3(posMin.x + dvX * (i + 1), posMin.y + dvY * (j + 1), posMin.z + dvZ * (k + 1));
                     matrix.Add(cube);
                 }
-            }
-        }
     }
 
     bool InsideTheBox(Cube c, Vector3 pt)
     {
-        if ((pt.x > c.minPos.x && pt.x < c.maxPos.x) && (pt.y > c.minPos.y && pt.y < c.maxPos.y) && (pt.z > c.minPos.z && pt.z < c.maxPos.z))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return (pt.x > c.posMin.x && pt.x < c.posMax.x) && (pt.y > c.posMin.y && pt.y < c.posMax.y) && (pt.z > c.posMin.z && pt.z < c.posMax.z);
     }
-    void simplification()
+    void Simplify()
     {
         foreach (Cube c in matrix)
         {
             List<int> listInCube = new List<int>();
             Vector3 somme = Vector3.zero;
             for (int i = 0; i < vertices.Length; i++)
-            {
-
                 if (InsideTheBox(c, vertices[i]))
                 {
                     listInCube.Add(i);
                     somme += vertices[i];
                 }
-            }
 
-            //fait la moyenne des points dans ma cellule
             foreach (int t in listInCube)
-            {
                 vertices[t] = somme / listInCube.Count;
-            }
         }
     }
-
-
 }
