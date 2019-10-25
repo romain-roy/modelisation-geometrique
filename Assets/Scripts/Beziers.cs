@@ -17,20 +17,50 @@ public class Beziers : MonoBehaviour
         lineRenderer.startColor = lineRenderer.endColor = Color.white;
         lineRenderer.startWidth = lineRenderer.endWidth = 0.1f;
         lineRenderer.material = material;
-    }
 
-    void Update()
-    {
         lineRenderer.positionCount = nbPoints;
 
-        for (int i = 0; i < nbPoints; i++)
+        Vector3 a = (P[3] - P[2]).normalized;
+        a *= (P[3] - P[2]).magnitude;
+        a += P[3];
+
+        Vector3 b = (P[4] - P[5]).normalized;
+        b *= (P[4] - P[5]).magnitude;
+        b += P[4];
+
+        Vector3 v1 = a - P[3];
+        Vector3 v2 = b - P[4];
+
+        Vector3 v2p = new Vector3(-v2.y, v2.x, v2.z);
+
+        float t = (Vector3.Dot(b, v2p) - Vector3.Dot(a, v2p)) / Vector3.Dot(v1, v2p);
+
+        Vector3 intersection = a + t * v1;
+
+        P[3] = intersection;
+        P[4] = a;
+        P.RemoveAt(5);
+
+        for (int i = 0; i < 20; i++)
         {
-            float u = i / (nbPoints - 1f);
+            float u = i / (20 - 1f);
 
             Vector3 position = new Vector3(0f, 0f, 0f);
 
-            for (int j = 0; j < P.Count; j++)
-                position += Bernstein(u, j, P.Count - 1) * P[j];
+            for (int j = 0; j < 4; j++)
+                position += Bernstein(u, j, 3) * P[j];
+
+            lineRenderer.SetPosition(i, position);
+        }
+
+        for (int i = 20; i < 40; i++)
+        {
+            float u = (i - 20) / (20 - 1f);
+
+            Vector3 position = new Vector3(0f, 0f, 0f);
+
+            for (int j = 3; j < 7; j++)
+                position += Bernstein(u, j - 3, 3) * P[j];
 
             lineRenderer.SetPosition(i, position);
         }
