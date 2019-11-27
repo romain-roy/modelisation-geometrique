@@ -12,10 +12,18 @@ Une autre partie permet de créer des représentations volumiques de formes, com
 
 ![Quadriques](/Images/Formes.png)
 
-###### Meshs
+###### Meshes
 
 ![Meshs](/Images/Maillage.png)
 
 ###### Représentation volumique
 
 ![Volumes](/Images/Volumes.png)
+
+###### Simplification de meshes et subdivision
+
+![Simplification](/Images/Simplification.png)
+
+###### Courbe de Bézier
+
+![Bézier](/Images/Bezier.png)
