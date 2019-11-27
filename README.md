@@ -4,7 +4,11 @@ Divers algorithmes permettant de modéliser des quadriques et leur représentati
 
 Permet aussi de lire des fichiers de maillage au format `.off`.
 
+Ces derniers peuvent être simplifiés ou subdivisés.
+
 Une autre partie permet de créer des représentations volumiques de formes, comme des sphères, avec une méthode d'énumération spatiale. Des opérateurs de mélanges permettent de gérer les interactions entre les sphères (union, intersection).
+
+Enfin, une dernière partie est consacrée aux courbes d'Hermine et courbes de Bézier.
 
 ### Aperçu
 
@@ -24,6 +28,6 @@ Une autre partie permet de créer des représentations volumiques de formes, com
 
 ![Simplification](/Images/Simplification.png)
 
-###### Courbe de Bézier
+###### Courbes de Bézier
 
 ![Bézier](/Images/Bezier.png)
